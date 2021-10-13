@@ -11,124 +11,25 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
     />
-    <script src="https://unpkg.com/vue@next"></script>
+    <!-- <script src="https://unpkg.com/vue@next"></script> -->
   </head>
 
   <body>
     <div class="container">
-      <div class="card">
-        <!-- 若要呈現在html上，需要加入大括號{} -->
-        {{text}} <br />
-        {{name}} <br />
-        <hr />
-        <!-- 指令: v-x -->
-        <!-- 屬性不會加入大括號{} -->
-        <!-- v-model: 雙向綁定 -->
-        {{num}} <br />
-        <input type="number" v-model="num" placeholder="0" />
-      </div>
-      <div class="card">
-        <!-- 顯示物件內容 -->
-        {{person.name}}
-      </div>
-      <div class="card">
-        <!-- v-bind: html屬性綁定 -->
-        <!-- 通常會用縮寫表示 -->
-        <img
-          :src="person.image"
-          :alt="person.name"
-          :title="person.name"
-          width="100"
-        />
-      </div>
-      <div class="card">
-        <!-- v-if/v-else-if/v-else -->
-        <i v-if="person.gender==='male'" class="bi bi-gender-male"></i>
-        <i v-else class="bi bi-gender-female"></i>
-      </div>
-      <div class="card">
-        <!-- v-for -->
-        <ul>
-          <li v-for="(item, index) in people" :key="index">
-            <figure>
-              <img :src="item.image" :alt="item.name" />
-              <figcaption>{{item.name}}</figcaption>
-              <i v-if="item.gender==='male'" class="bi bi-gender-male"></i>
-              <i v-else class="bi bi-gender-female"></i>
-            </figure>
-
-            <!-- v-on -->
-            Cash: {{item.cash}}
-            <input
-              type="button"
-              value="Add by methods"
-              v-on:click="add(item)"
-            />
-            <input type="button" value="Add by click" @click="item.cash+=100" />
-          </li>
-        </ul>
-      </div>
+      <div class="card">{{text}}</div>
     </div>
 
-    <script>
-      Vue.createApp({
-        // function
-        // 資料邏輯
+    <script type="module">
+      import { createApp } from "https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.20/vue.esm-browser.prod.min.js";
+      createApp({
         data() {
           return {
-            text: `I'm Aaron.`,
-            name: `Anna`,
-            num: 100,
-            person: {
-              name: `Aaron`,
-              image: `https://via.placeholder.com/300x200?text=hi`,
-              cash: 1000,
-              gender: `male`,
-            },
-            people: [
-              {
-                name: `Aaron`,
-                image: `https://via.placeholder.com/300x200?text=aaron`,
-                cash: 1000,
-                gender: `male`,
-              },
-              {
-                name: `Anna`,
-                image: `https://via.placeholder.com/300x200?text=anna`,
-                cash: 2000,
-                gender: `female`,
-              },
-              {
-                name: `Alex`,
-                image: `https://via.placeholder.com/300x200?text=alex`,
-                cash: 3000,
-                gender: `male`,
-              },
-              {
-                name: `Jane`,
-                image: `https://via.placeholder.com/300x200?text=jane`,
-                cash: 4000,
-                gender: `female`,
-              },
-            ],
+            text: "Aaron",
           };
         },
-        computed: {},
-        // object
-        // 方法
-        methods: {
-          add(item) {
-            item.cash += 100;
-          },
-        },
-        // function
-        // 生命週期
+        methods: {},
         mounted() {
-          console.log(`mounted: ${this.name}`);
-          this.text = "hi";
-          console.log(this.$);
-
-          // Ajax取得資料
+          console.log("Hi");
         },
       }).mount(".container");
     </script>
