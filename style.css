@@ -1,0 +1,27 @@
+body {
+  font-family: "PingFangTC", "Microsoft JhengHei", sans-serif;
+  font-size: 20px;
+  color: #fff;
+}
+
+.container {
+  margin: 0 auto;
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid gray;
+}
+
+.card {
+  margin: 10px;
+  padding: 10px;
+  background: #0095c0;
+}
+
+.pass {
+  background: #26be19;
+}
+
+.fail {
+  background: #e92f2f;
+}
