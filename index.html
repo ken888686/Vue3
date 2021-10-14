@@ -24,14 +24,34 @@
   <body>
     <div class="container">
       <div class="card">
-        <button
-          type="button"
-          class="btn btn-outline-primary"
-          :class="{active: isActive}"
-          @click="isActive = !isActive"
-        >
-          Primary
-        </button>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button
+              class="nav-link"
+              :class="{active: isActive==='Home'}"
+              @click="isActive='Home'"
+            >
+              Home
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button
+              class="nav-link"
+              :class="{active: isActive==='Profile'}"
+              @click="isActive='Profile'"
+            >
+              Profile
+            </button>
+          </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane" :class="{active: isActive==='Home'}">
+            <div class="card">home</div>
+          </div>
+          <div class="tab-pane" :class="{active: isActive==='Profile'}">
+            <div class="card">profile</div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -42,7 +62,7 @@
         data() {
           // 資料集
           return {
-            isActive: true,
+            isActive: "Home",
           };
         },
         methods: {
