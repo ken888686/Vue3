@@ -1,7 +1,6 @@
 body {
   font-family: "Fira Code", "PingFangTC", "Microsoft JhengHei", sans-serif;
   font-size: 20px;
-  color: #fff;
 }
 
 .container {
@@ -10,18 +9,4 @@ body {
   display: flex;
   flex-direction: column;
   border: 1px solid gray;
-}
-
-.card {
-  margin: 10px;
-  padding: 10px;
-  background: #0095c0;
-}
-
-.pass {
-  background: #26be19;
-}
-
-.fail {
-  background: #e92f2f;
 }
