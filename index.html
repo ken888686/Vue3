@@ -24,85 +24,121 @@
   </head>
 
   <body>
-    <div class="container">
-      computed:{{doubleNum}}
-      <input type="button" value="Go" @click="addNum" />
-      <select
-        class="form-select mb-3"
-        aria-label="gender select"
-        v-model="genderFilter"
-      >
-        <option selected disabled>Choose...</option>
-        <option value="male">男生</option>
-        <option value="female">女生</option>
-      </select>
-      <div class="row row-cols-2">
-        <div
-          class="card text-dark bg-light mb-3 col mx-1"
-          style="max-width: 18rem"
-          v-for="(item, index) in filter"
+    <div id="app" class="container mt-3">
+      <div class="input-group mb-3">
+        <input
+          type="text"
+          v-model="text"
+          class="form-control"
+          placeholder="item..."
+          aria-label="input item"
+          aria-describedby="input button"
+        />
+        <button
+          class="btn btn-outline-secondary"
+          type="button"
+          @click="addItem"
         >
-          <div class="card-header">
-            {{item.title}} {{item.name.first}} {{item.name.last}}
-          </div>
-          <div class="card-body">
-            <h5 class="card-title">{{item.id.name ? item.id.name : 'none'}}</h5>
-            <p class="card-text">
-              {{item.dob.age}}, {{add10(item.dob.age)}}, {{showSt('Hi~~')}}
-            </p>
-          </div>
-        </div>
+          Add Item
+        </button>
       </div>
+      <table class="table table-dark table-striped table-hover align-middle">
+        <thead>
+          <tr>
+            <th scope="col">Content</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in data">
+            <th scope="row">
+              <input
+                type="text"
+                name=""
+                id=""
+                v-model="item.text"
+                v-if="item.isEdit"
+              />
+              <span v-else>{{item.text}}</span>
+            </th>
+            <td>
+              <button
+                v-if="item.isEdit"
+                type="button"
+                class="btn btn-success"
+                @click="doneItem(item)"
+              >
+                Done
+              </button>
+              <button
+                v-else
+                type="button"
+                class="btn btn-secondary"
+                @click="editItem(item)"
+              >
+                Edit
+              </button>
+            </td>
+            <td>
+              <button
+                :disabled="item.isEdit"
+                type="button"
+                class="btn btn-danger"
+                @click="deleteItem(item)"
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <script>
-      Vue.createApp({
+      const app = Vue.createApp({
         data() {
           return {
-            genderFilter: "",
-            num: 1,
-            info: {},
-            results: [],
+            text: "Aaron Tu",
+            data: [
+              {
+                id: 2,
+                text: "test",
+                isEdit: false,
+              },
+            ],
           };
         },
         methods: {
-          getRandomUser() {
-            axios.get("https://randomuser.me/api/?results=10").then((res) => {
-              let info = res.data.info;
-              let results = res.data.results;
-              console.log(info);
-              console.log(results);
-              this.results = results;
-            });
-          },
-          add10(cash) {
-            return cash + 10;
-          },
-          addNum() {
-            this.num += 10;
-          },
-          showSt(str) {
-            if (str) {
-              return str;
+          addItem() {
+            if (!this.text) {
+              return;
             }
-            return "Hi";
+            this.data.push({
+              id: this.data.length + 1,
+              text: this.text,
+              isEdit: false,
+            });
+            this.text = "";
+          },
+          deleteItem(item) {
+            const index = this.data.findIndex((x) => x.id === item.id);
+            this.data.splice(index, 1);
+          },
+          editItem(item) {
+            item.isEdit = true;
+          },
+          doneItem(item) {
+            const index = this.data.findIndex((x) => x.id === item.id);
+            this.data[index] = item;
+            item.isEdit = false;
           },
         },
-        computed: {
-          doubleNum() {
-            return this.num * 11;
-          },
-          filter() {
-            const newResults = this.results.filter(
-              (item) => item.gender === this.genderFilter
-            );
-            return newResults;
-          },
-        },
-        mounted() {
-          this.getRandomUser();
-        },
-      }).mount(".container");
+        computed: {},
+        mounted() {},
+      });
+
+      app.mount("#app");
     </script>
   </body>
 </html>
