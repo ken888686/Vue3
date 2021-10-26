@@ -20,124 +20,83 @@
       crossorigin="anonymous"
     ></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://unpkg.com/vue@next"></script>
+    <!-- <script src="https://unpkg.com/vue@next"></script> -->
   </head>
 
   <body>
     <div id="app" class="container mt-3">
-      <div class="input-group mb-3">
+      {{text}}, {{person.name}},{{x}}
+      <div class="input-group input-group-lg my-3">
         <input
           type="text"
-          v-model="text"
           class="form-control"
-          placeholder="item..."
-          aria-label="input item"
-          aria-describedby="input button"
+          placeholder=""
+          aria-label="Example text with button addon"
+          aria-describedby="button-addon1"
+          v-model="text"
         />
-        <button
-          class="btn btn-outline-secondary"
-          type="button"
-          @click="addItem"
-        >
-          Add Item
+        <button type="button" class="btn btn-primary" @click="getText">
+          Primary
         </button>
       </div>
-      <table class="table table-dark table-striped table-hover align-middle">
-        <thead>
-          <tr>
-            <th scope="col">Content</th>
-            <th scope="col"></th>
-            <th scope="col"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(item, index) in data">
-            <th scope="row">
-              <input
-                type="text"
-                name=""
-                id=""
-                v-model="item.text"
-                v-if="item.isEdit"
-              />
-              <span v-else>{{item.text}}</span>
-            </th>
-            <td>
-              <button
-                v-if="item.isEdit"
-                type="button"
-                class="btn btn-success"
-                @click="doneItem(item)"
-              >
-                Done
-              </button>
-              <button
-                v-else
-                type="button"
-                class="btn btn-secondary"
-                @click="editItem(item)"
-              >
-                Edit
-              </button>
-            </td>
-            <td>
-              <button
-                :disabled="item.isEdit"
-                type="button"
-                class="btn btn-danger"
-                @click="deleteItem(item)"
-              >
-                Delete
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <p>{{num}} <input type="number" v-model.number="num" /></p>
+      <p>{{doubleNum}}</p>
     </div>
 
-    <script>
-      const app = Vue.createApp({
-        data() {
+    <script type="module">
+      import {
+        createApp,
+        ref,
+        reactive,
+        onMounted,
+        computed,
+      } from "https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.20/vue.esm-browser.min.js";
+      const app = createApp({
+        setup() {
+          const text = ref("Yo");
+          const person = reactive({
+            name: "Aaron",
+          });
+          const x = ref({
+            list: [1, 2, 3, 4],
+          });
+
+          // methods
+          function getText() {
+            console.log(text.value);
+          }
+
+          // life cycle - mounted
+          onMounted(() => {
+            // 邏輯1
+            getText();
+            person.name = "U";
+            console.log(x);
+            console.log("mounted1");
+            x.value.name = "Hi";
+          });
+          onMounted(() => {
+            // 邏輯2
+            getText();
+            console.log("mounted2");
+          });
+
+          const num = ref(1);
+          const doubleNum = computed(() => {
+            console.log(num);
+            return num.value * 2;
+          });
+
           return {
-            text: "Aaron Tu",
-            data: [
-              {
-                id: 2,
-                text: "test",
-                isEdit: false,
-              },
-            ],
+            text,
+            person,
+            x,
+            num,
+            getText,
+            doubleNum,
           };
         },
-        methods: {
-          addItem() {
-            if (!this.text) {
-              return;
-            }
-            this.data.push({
-              id: this.data.length + 1,
-              text: this.text,
-              isEdit: false,
-            });
-            this.text = "";
-          },
-          deleteItem(item) {
-            const index = this.data.findIndex((x) => x.id === item.id);
-            this.data.splice(index, 1);
-          },
-          editItem(item) {
-            item.isEdit = true;
-          },
-          doneItem(item) {
-            const index = this.data.findIndex((x) => x.id === item.id);
-            this.data[index] = item;
-            item.isEdit = false;
-          },
-        },
-        computed: {},
-        mounted() {},
       });
-
       app.mount("#app");
     </script>
   </body>
