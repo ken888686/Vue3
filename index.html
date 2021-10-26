@@ -12,47 +12,15 @@
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
       crossorigin="anonymous"
     />
-    <!-- <link rel="stylesheet" href="reset.css" />
-    <link rel="stylesheet" href="style.css" /> -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-      crossorigin="anonymous"
-    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <!-- <script src="https://unpkg.com/vue@next"></script> -->
   </head>
 
   <body>
     <div id="app" class="container">
-      computed:{{doubleNum}}
-      <input type="button" value="Go" @click="addNum" />
-      <select
-        class="form-select mb-3"
-        aria-label="gender select"
-        v-model="genderFilter"
-      >
-        <option selected disabled>Choose...</option>
-        <option value="male">男生</option>
-        <option value="female">女生</option>
-      </select>
-      <div class="row row-cols-2">
-        <div
-          class="card text-dark bg-light mb-3 col mx-1"
-          style="max-width: 18rem"
-          v-for="(item, index) in filter"
-        >
-          <div class="card-header">
-            {{item.title}} {{item.name.first}} {{item.name.last}}
-          </div>
-          <div class="card-body">
-            <h5 class="card-title">{{item.id.name ? item.id.name : 'none'}}</h5>
-            <p class="card-text">{{item.dob.age}}</p>
-          </div>
-        </div>
-      </div>
+      <h1>{{num}}</h1>
     </div>
-
     <script type="module">
       import {
         createApp,
@@ -60,97 +28,39 @@
         computed,
         onMounted,
       } from "https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.20/vue.esm-browser.min.js";
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js";
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries
+      import { getDatabase } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-database.js";
+
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyBCijzAcvfcydXTuENcKaP1WcKbqQF9Zh0",
+        authDomain: "chatroom-pretest.firebaseapp.com",
+        projectId: "chatroom-pretest",
+        storageBucket: "chatroom-pretest.appspot.com",
+        messagingSenderId: "172458831377",
+        appId: "1:172458831377:web:3efb5fb7dbb2a0896d8bb0",
+        databaseURL:
+          "https://chatroom-pretest-default-rtdb.asia-southeast1.firebasedatabase.app/",
+      };
 
       const app = createApp({
         setup() {
-          const num = ref(1);
-          const results = ref([]);
-          const genderFilter = ref([]);
-
-          function addNum() {
-            num.value += 2;
-          }
-
-          function getRandomUser() {
-            axios.get("https://randomuser.me/api/?results=10").then((res) => {
-              let info = res.data.info;
-              results.value = res.data.results;
-            });
-          }
-
-          const doubleNum = computed(() => {
-            return num.value * 2;
-          });
-
-          const filter = computed(() => {
-            return results.value.filter((x) => x.gender === genderFilter.value);
-          });
+          const num = ref(100);
 
           onMounted(() => {
-            getRandomUser();
+            // Initialize Firebase
+            const firebase = initializeApp(firebaseConfig);
+            const db = getDatabase(firebase);
+            console.log(db);
           });
 
-          return {
-            num,
-            doubleNum,
-            addNum,
-            genderFilter,
-            filter,
-          };
+          return { num };
         },
       });
-
       app.mount("#app");
-
-      /*
-      Vue.createApp({
-        data() {
-          return {
-            genderFilter: "",
-            num: 1,
-            info: {},
-            results: [],
-          };
-        },
-        methods: {
-          getRandomUser() {
-            axios.get("https://randomuser.me/api/?results=10").then((res) => {
-              let info = res.data.info;
-              let results = res.data.results;
-              console.log(info);
-              console.log(results);
-              this.results = results;
-            });
-          },
-          add10(cash) {
-            return cash + 10;
-          },
-          addNum() {
-            this.num += 10;
-          },
-          showSt(str) {
-            if (str) {
-              return str;
-            }
-            return "Hi";
-          },
-        },
-        computed: {
-          doubleNum() {
-            return this.num * 11;
-          },
-          filter() {
-            const newResults = this.results.filter(
-              (item) => item.gender === this.genderFilter
-            );
-            return newResults;
-          },
-        },
-        mounted() {
-          this.getRandomUser();
-        },
-      }).mount(".container");
-      */
     </script>
   </body>
 </html>
