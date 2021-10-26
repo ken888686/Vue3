@@ -24,80 +24,133 @@
   </head>
 
   <body>
-    <div id="app" class="container mt-3">
-      {{text}}, {{person.name}},{{x}}
-      <div class="input-group input-group-lg my-3">
-        <input
-          type="text"
-          class="form-control"
-          placeholder=""
-          aria-label="Example text with button addon"
-          aria-describedby="button-addon1"
-          v-model="text"
-        />
-        <button type="button" class="btn btn-primary" @click="getText">
-          Primary
-        </button>
+    <div id="app" class="container">
+      computed:{{doubleNum}}
+      <input type="button" value="Go" @click="addNum" />
+      <select
+        class="form-select mb-3"
+        aria-label="gender select"
+        v-model="genderFilter"
+      >
+        <option selected disabled>Choose...</option>
+        <option value="male">男生</option>
+        <option value="female">女生</option>
+      </select>
+      <div class="row row-cols-2">
+        <div
+          class="card text-dark bg-light mb-3 col mx-1"
+          style="max-width: 18rem"
+          v-for="(item, index) in filter"
+        >
+          <div class="card-header">
+            {{item.title}} {{item.name.first}} {{item.name.last}}
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">{{item.id.name ? item.id.name : 'none'}}</h5>
+            <p class="card-text">{{item.dob.age}}</p>
+          </div>
+        </div>
       </div>
-      <p>{{num}} <input type="number" v-model.number="num" /></p>
-      <p>{{doubleNum}}</p>
     </div>
 
     <script type="module">
       import {
         createApp,
         ref,
-        reactive,
-        onMounted,
         computed,
+        onMounted,
       } from "https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.20/vue.esm-browser.min.js";
+
       const app = createApp({
         setup() {
-          const text = ref("Yo");
-          const person = reactive({
-            name: "Aaron",
-          });
-          const x = ref({
-            list: [1, 2, 3, 4],
-          });
+          const num = ref(1);
+          const results = ref([]);
+          const genderFilter = ref([]);
 
-          // methods
-          function getText() {
-            console.log(text.value);
+          function addNum() {
+            num.value += 2;
           }
 
-          // life cycle - mounted
-          onMounted(() => {
-            // 邏輯1
-            getText();
-            person.name = "U";
-            console.log(x);
-            console.log("mounted1");
-            x.value.name = "Hi";
-          });
-          onMounted(() => {
-            // 邏輯2
-            getText();
-            console.log("mounted2");
-          });
+          function getRandomUser() {
+            axios.get("https://randomuser.me/api/?results=10").then((res) => {
+              let info = res.data.info;
+              results.value = res.data.results;
+            });
+          }
 
-          const num = ref(1);
           const doubleNum = computed(() => {
-            console.log(num);
             return num.value * 2;
           });
 
+          const filter = computed(() => {
+            return results.value.filter((x) => x.gender === genderFilter.value);
+          });
+
+          onMounted(() => {
+            getRandomUser();
+          });
+
           return {
-            text,
-            person,
-            x,
             num,
-            getText,
             doubleNum,
+            addNum,
+            genderFilter,
+            filter,
           };
         },
       });
+
       app.mount("#app");
+
+      /*
+      Vue.createApp({
+        data() {
+          return {
+            genderFilter: "",
+            num: 1,
+            info: {},
+            results: [],
+          };
+        },
+        methods: {
+          getRandomUser() {
+            axios.get("https://randomuser.me/api/?results=10").then((res) => {
+              let info = res.data.info;
+              let results = res.data.results;
+              console.log(info);
+              console.log(results);
+              this.results = results;
+            });
+          },
+          add10(cash) {
+            return cash + 10;
+          },
+          addNum() {
+            this.num += 10;
+          },
+          showSt(str) {
+            if (str) {
+              return str;
+            }
+            return "Hi";
+          },
+        },
+        computed: {
+          doubleNum() {
+            return this.num * 11;
+          },
+          filter() {
+            const newResults = this.results.filter(
+              (item) => item.gender === this.genderFilter
+            );
+            return newResults;
+          },
+        },
+        mounted() {
+          this.getRandomUser();
+        },
+      }).mount(".container");
+      */
     </script>
   </body>
 </html>
